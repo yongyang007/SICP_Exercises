@@ -16,3 +16,7 @@
 (sqrt 0.01)
 (sqrt 9)
 (sqrt 2)
+
+(load "./newton_s_method_square_root_3.scm")
+
+(sqrt 1.0e-30)
