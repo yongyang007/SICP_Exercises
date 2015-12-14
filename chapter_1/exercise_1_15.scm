@@ -15,4 +15,4 @@
                                         ;(p (p (p (p (p (sine 0.05))))))
                                         ;p被使用了5次
 
-                                        ;空间O(log a) 步数O(log a)
+                                        ;空间Θ(log a) 步数Θ(log a)
