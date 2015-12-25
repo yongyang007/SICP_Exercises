@@ -15,13 +15,3 @@
         (else (+ a (fast-* a (- b 1))))))
 
 (fast-* 7 8)
-
-                                        ;迭代方式
-(define (fast-*-iter a b n)
-  (cond ((= b 0) n)
-        ((even? b) (fast-*-iter (double a) (halve b) n))
-        (else (fast-*-iter a (- b 1) (+ n a)))))
-(define (fast-* a b)
-  (fast-*-iter a b 0))
-
-(fast-* 7 8)
