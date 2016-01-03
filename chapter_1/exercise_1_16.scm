@@ -1,3 +1,4 @@
+(load "../square.scm")
 (define (fast-expt-iter a b n)
   (if (= n 0)
       a

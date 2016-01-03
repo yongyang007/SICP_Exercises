@@ -1,4 +1,4 @@
-(define (square x) (* x x))
+(load "../square.scm")
 
 (define (sqrt x)
   (define (sqrt-iter guess)
