@@ -1,0 +1,15 @@
+(load "./fast_prime_test.scm")
+
+(define (test-carmichael n)
+  (define (test-iter a)
+    (cond ((< a 0) #t)
+          ((= (expmod a n n) a) (test-iter (- a 1)))
+          (else #f)))
+  (test-iter (- n 1)))
+
+(test-carmichael 561)
+(test-carmichael 1105)
+(test-carmichael 1729)
+(test-carmichael 2465)
+(test-carmichael 2821)
+(test-carmichael 6601)
