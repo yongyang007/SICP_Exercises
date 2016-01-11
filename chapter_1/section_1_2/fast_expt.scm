@@ -1,4 +1,4 @@
-(load "../square.scm")
+(load "../../tool/square.scm")
 
 (define (fast-expt b n)
   (cond ((= n 0) 1)
