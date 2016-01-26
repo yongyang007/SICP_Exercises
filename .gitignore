@@ -1,4 +1,7 @@
-//auto save in emacs
+// auto save in emacs
 \#*\#
-//for X OS
+
+// for X OS
 .DS_Store
+
+*~
