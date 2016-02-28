@@ -5,8 +5,8 @@
          (product term (next a) next b))))
                                         ;递归计算过程
 (define (add-one x) (+ x 1))
+(define (prototype x) x)
 (define (factorial n)
-  (define (prototype x) x)
   (product prototype 1 add-one n))
 
 (load "../../tool/square.scm")
