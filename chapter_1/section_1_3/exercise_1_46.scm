@@ -1,0 +1,25 @@
+(define (interative-improve good-enough? improve)
+  (lambda (guess)
+    (if (good-enough? (improve guess) guess)
+        (improve guess)
+        ((interative-improve good-enough? improve) (improve guess)))))
+
+(define (sqrt x)
+  (define (improve guess)
+    (define (average a b) (/ (+ a b) 2))
+    (average guess (/ x guess)))
+  (define (closs-enough? a b)
+    (< (abs (- 1.0 (/ a b))) 0.00001))
+  ((interative-improve closs-enough? improve) 1.0))
+
+(sqrt 4)
+(sqrt 9)
+(sqrt 121)
+
+(define (fixed-point f first-guess)
+  (define toterance 0.00001)
+  (define (closs-enough? v1 v2)
+    (< (abs (- v1 v2)) toterance))
+  ((interative-improve closs-enough? f) first-guess))
+
+(fixed-point cos 1.0)
