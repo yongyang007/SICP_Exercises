@@ -1,0 +1,15 @@
+(define (cons a b)
+  (* (expt 2 a)
+     (expt 3 b)))
+(define (analyze-cons-iter x n result)
+  (if (= (gcd x n) 1)
+      result
+      (analyze-cons-iter (/ x n) n (+ result 1))))
+(define (car x)
+  (analyze-cons-iter x 2 0))
+(define (cdr x)
+  (analyze-cons-iter x 3 0))
+
+(define a (cons 5 6))
+(car a)
+(cdr a)
