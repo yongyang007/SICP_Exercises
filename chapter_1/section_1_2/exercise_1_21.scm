@@ -1,4 +1,4 @@
-(load "./smallest_divisor.scm")
+(load "../../tool/prime.scm")
 
 (smallest-divisor 199)
 (smallest-divisor 1999)
