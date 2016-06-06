@@ -1,4 +1,5 @@
-(load "./exercise_2_40.scm")
+(add-load-path "./")
+(load "exercise_2_40.scm")
 
 (define (unique-triples n)
   (flatmap (lambda (i)

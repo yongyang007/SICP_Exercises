@@ -5,7 +5,9 @@
              (proc sub-tree)))
        tree))
 
-(load "../../tool/square.scm")
+(add-load-path "../../tool/")
+(load "square.scm")
+
 (define (square-tree tree)
   (tree-map square tree))
 

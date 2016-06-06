@@ -1,5 +1,6 @@
-(load "../../tool/runtime.scm")
-(load "../../tool/prime.scm")
+(add-load-path "../../tool/")
+(load "runtime.scm")
+(load "prime.scm")
 
 (define (timed-prime-test n)
   (newline)

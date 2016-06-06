@@ -1,1 +1,2 @@
-(load "./newtons_method.scm")
+(add-load-path "./")
+(load "newtons_method.scm")

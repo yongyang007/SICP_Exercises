@@ -1,5 +1,7 @@
-(load "../../tool/cube.scm")
-(load "./sum.scm")
+(add-load-path "../../tool/")
+(add-load-path "./")
+(load "cube.scm")
+(load "sum.scm")
 
 (define (simpson-s-rule f a b n)
   (define h (* (/ (- b a) n) 1.0))

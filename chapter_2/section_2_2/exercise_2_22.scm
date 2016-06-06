@@ -1,4 +1,5 @@
-(load "./exercise_2_21.scm")
+(add-load-path "./")
+(load "exercise_2_21.scm")
 
 (define (square-list items)
   (define (iter things answer)

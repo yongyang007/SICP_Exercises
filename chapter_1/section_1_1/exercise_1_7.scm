@@ -1,4 +1,6 @@
-(load "./newton_s_method_square_root_1.scm")
+(add-load-path "./")
+(load "newton_s_method_square_root_1.scm")
+
 (sqrt 1.0e-30)
                                         ;结果比预期值大
                                         ;对于数值很小的数：

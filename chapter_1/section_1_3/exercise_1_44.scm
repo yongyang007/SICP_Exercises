@@ -5,7 +5,8 @@
                       (f x)
                       (f (+ x dx)))))
 
-(load "./exercise_1_43.scm")
+(add-load-path "./")
+(load "exercise_1_43.scm")
 
 (define (smooth-n-times f n)
   ((repeated smooth n) f))

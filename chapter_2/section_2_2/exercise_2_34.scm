@@ -1,4 +1,5 @@
-(load "../../tool/accumulate.scm")
+(add-load-path "../../tool/")
+(load "accumulate.scm")
 
 (define (horner-eval x coefficient-sequence)
   (accumulate (lambda (this-coeff higher-terms) (+ this-coeff (* higher-terms x)))

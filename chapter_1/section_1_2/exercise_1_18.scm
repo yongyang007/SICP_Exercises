@@ -1,4 +1,5 @@
-(load "./exercise_1_17.scm")
+(add-load-path "./")
+(load "exercise_1_17.scm")
                                         ;迭代方式
 (define (fast-*-iter a b n)
   (cond ((= b 0) n)

@@ -1,4 +1,5 @@
-(load "../../tool/accumulate.scm")
+(add-load-path "../../tool/")
+(load "accumulate.scm")
 
 (define (map p sequence)
   (accumulate (lambda (x y) (append (list (p x)) y)) '() sequence))

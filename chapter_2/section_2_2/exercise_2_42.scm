@@ -1,6 +1,6 @@
-(load "../../tool/accumulate.scm")
-(load "../../tool/flatmap.scm")
-(load "../../tool/enumerate-interval.scm")
+(add-load-path "../../tool/")
+(load "flatmap.scm")
+(load "enumerate-interval.scm")
 
 (define (queens board-size)
   (define (queen-cols k)

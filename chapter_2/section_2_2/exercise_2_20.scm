@@ -1,4 +1,5 @@
-(load "./exercise_2_18.scm")
+(add-load-path "./")
+(load "exercise_2_18.scm")
 
 (define (same-parity x . items)
   (define (same-parity-iter origin target)

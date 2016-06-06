@@ -1,4 +1,5 @@
-(load "../../tool/accumulate.scm")
+(add-load-path "../../tool/")
+(load "accumulate.scm")
 
 (define (accumulate-n op init seqs)
   (if (null? (car seqs))

@@ -1,4 +1,5 @@
-(load "../../tool/square.scm")
+(add-load-path "../../tool/")
+(load "square.scm")
 
 (define (smallest-divisor n)
   (find-divisor n 2))

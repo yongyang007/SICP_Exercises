@@ -1,4 +1,5 @@
-(load "./picture_language.scm")
+(add-load-path "./")
+(load "picture_language.scm")
 
 (define (up-split painter n)
   (if (= n 0)

@@ -1,4 +1,5 @@
-(load "./newton_s_method_square_root_1.scm")
+(add-load-path "./")
+(load "newton_s_method_square_root_1.scm")
 
 (define (sqrt-iter guess x)
   (if (good-enough? guess (improve guess x))

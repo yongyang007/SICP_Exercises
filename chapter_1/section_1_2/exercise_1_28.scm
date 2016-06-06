@@ -1,5 +1,6 @@
-(load "../../tool/square.scm")
-(load "../../tool/random.scm")
+(add-load-path "../../tool/")
+(load "square.scm")
+(load "random.scm")
 
 (define (expmod base exp m)
   (cond ((= exp 0) 1)

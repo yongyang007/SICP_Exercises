@@ -1,5 +1,7 @@
-load "../../tool/square.scm")
-(load "./exercise_1_37.scm")
+(add-load-path "./")
+(add-load-path "../../tool/")
+(load "square.scm")
+(load "exercise_1_37.scm")
 
 (define (tan-cf x k)
   (/ (cont-frac (lambda (i) (- (square x)))

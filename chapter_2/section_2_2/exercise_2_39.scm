@@ -1,4 +1,5 @@
-(load "./exercise_2_38.scm")
+(add-load-path "./")
+(load "exercise_2_38.scm")
 
 (define (reverse sequence)
   (fold-right (lambda (x y) (append y (list x))) '() sequence))

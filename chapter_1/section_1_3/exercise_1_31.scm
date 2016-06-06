@@ -9,7 +9,8 @@
 (define (factorial n)
   (product prototype 1 add-one n))
 
-(load "../../tool/square.scm")
+(add-load-path "../../tool/")
+(load "square.scm")
 (define (pi)
   (define (term-john x) (/ (* 4 (square x))
                            (- (* 4 (square x)) 1)))

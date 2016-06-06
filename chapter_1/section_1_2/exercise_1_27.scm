@@ -1,4 +1,5 @@
-(load "./fast_prime_test.scm")
+(add-load-path "./")
+(load "fast_prime_test.scm")
 
 (define (test-carmichael n)
   (define (test-iter a)

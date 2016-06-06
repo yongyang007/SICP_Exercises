@@ -1,4 +1,5 @@
-(load "./exercise_2_36.scm")
+(add-load-path "./")
+(load "exercise_2_36.scm")
 
 (define v1 (list 1 2 3 4))
 (define v2 (list 5 6 7 8))

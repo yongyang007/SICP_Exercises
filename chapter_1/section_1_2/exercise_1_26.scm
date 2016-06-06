@@ -1,4 +1,5 @@
-(load "./exercise_1_24.scm")
+(add-load-path "./")
+(load "exercise_1_24.scm")
 
 (define (expmod base exp m)
   (cond ((= exp 0) 1)
@@ -10,7 +11,7 @@
          (remainder (* base (expmod base (- exp 1) m))
                     m))))
 
-(load "./search_for_primes_test.scm")
+(load "search_for_primes_test.scm")
 
                                         ;在expmod中如果改用显式的乘法的话，
                                         ;原本线状的计算过程就变为树状展开了。

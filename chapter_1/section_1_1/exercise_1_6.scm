@@ -1,4 +1,6 @@
-(load "./newton_s_method_square_root_1.scm")
+(add-load-path "./")
+(load "newton_s_method_square_root_1.scm")
+
 (define (new-if predicate then-clause else-clause)
   (cond (predicate then-clause)
         (else else-clause)))

@@ -1,4 +1,5 @@
-(load "./exercise_1_37.scm")
+(add-load-path "./")
+(load "exercise_1_37.scm")
 
 (+ (cont-frac (lambda (i) 1.0)
               (lambda (i)

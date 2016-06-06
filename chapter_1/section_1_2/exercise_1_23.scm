@@ -1,4 +1,5 @@
-(load "./exercise_1_22.scm")
+(add-load-path "./")
+(load "exercise_1_22.scm")
 
 (define (next n)
   (if (= n 2) 3 (+ n 2)))

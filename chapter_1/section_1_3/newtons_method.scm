@@ -1,4 +1,5 @@
-(load "./fixed_point.scm")
+(add-load-path "./")
+(load "fixed_point.scm")
 
 (define (newtons-method g guess)
   (fixed-point (newtons-transform g) guess))

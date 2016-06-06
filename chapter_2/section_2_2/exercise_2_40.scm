@@ -1,6 +1,6 @@
-(load "../../tool/accumulate.scm")
-(load "../../tool/flatmap.scm")
-(load "../../tool/enumerate-interval.scm")
+(add-load-path "../../tool/")
+(load "flatmap.scm")
+(load "enumerate-interval.scm")
 
 (define (unique-pairs n)
   (flatmap (lambda (i)
@@ -15,8 +15,8 @@
 
 (map make-pair-sum (unique-pairs 4))
 
-(load "../../tool/square.scm")
-(load "../../tool/prime.scm")
+(load "square.scm")
+(load "prime.scm")
 
 (define (prime-sum? pair)
   (prime? (+ (car pair) (cadr pair))))

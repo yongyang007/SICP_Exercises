@@ -1,4 +1,5 @@
-(load "./rect_1.scm")
+(add-load-path "./")
+(load "rect_1.scm")
 
 (define (perimeter-rect r)
   (* (+ (height-rect r)
@@ -16,7 +17,7 @@
 (perimeter-rect rect1)
 (area-rect rect1)
 
-(load "./rect_2.scm")
+(load "rect_2.scm")
 
 (define p4 (make-point 5 1))
 

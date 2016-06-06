@@ -1,4 +1,5 @@
-(load "./fixed_point.scm")
+(add-load-path "./")
+(load "fixed_point.scm")
                                         ;重新定义打印序列版的fixed-point
 (define (fixed-point f first-guess)
   (define (close-enough? v1 v2)
@@ -18,5 +19,5 @@
 
 (fixed-point (lambda (x) (/ (log 1000) (log x))) 1.1)
 
-(load "./average_damp.scm")
+(load "average_damp.scm")
 (fixed-point (average-damp (lambda (x) (/ (log 1000) (log x)))) 1.1)

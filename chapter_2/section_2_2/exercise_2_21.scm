@@ -1,4 +1,6 @@
-(load "../../tool/square.scm")
+(add-load-path "../../tool/")
+(load "square.scm")
+
 (define (square-list items)
   (if (null? items)
       '()

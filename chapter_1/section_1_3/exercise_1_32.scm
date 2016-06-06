@@ -5,7 +5,8 @@
       (combiner (term a)
                 (accumulate combiner null-value term (next a) next b))))
 
-(load "./exercise_1_31.scm")
+(add-load-path "./")
+(load "exercise_1_31.scm")
 
 (define (sum term a next b)
   (accumulate + 0 term a next b))

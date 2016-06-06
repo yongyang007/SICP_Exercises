@@ -1,4 +1,5 @@
-(load "./exercise_2_2.scm")
+(add-load-path "./")
+(load "exercise_2_2.scm")
                                         ;用三个顶点定义
                                         ;  p1---o
                                         ;   |   |

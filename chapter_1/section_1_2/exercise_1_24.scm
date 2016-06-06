@@ -1,9 +1,10 @@
-(load "./exercise_1_22.scm")
-(load "./fast_prime_test.scm")
+(add-load-path "./")
+(load "exercise_1_22.scm")
+(load "fast_prime_test.scm")
 
 (define (prime? n) (fast-prime? n 10))
 
-(load "./search_for_primes_test.scm")
+(load "search_for_primes_test.scm")
 
                                         ;可以看到，在处理比较小的数的时候，改进后的算法还比较慢
                                         ;这是因为算法执行的速度还受到了计算步骤之外因素的影响

@@ -1,4 +1,5 @@
-(load "../../tool/accumulate.scm")
+(add-load-path "../../tool/")
+(load "accumulate.scm")
 
 (define (count-leaves t)
   (accumulate +

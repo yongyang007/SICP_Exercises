@@ -6,8 +6,10 @@
                     (filtered-accumulate valid? combiner null-value term (next a) next b))
           (filtered-accumulate valid? combiner null-value term (next a) next b))))
 
-(load "../section_1_2/fast_prime_test.scm")
-(load "./exercise_1_31.scm")
+(add-load-path "./")
+(add-load-path "../section_1_2/")
+(load "fast_prime_test.scm")
+(load "exercise_1_31.scm")
                                         ;a)给定范围内的素数之和
 (define (prime-sum a b)
   (define (prime? x) (fast-prime? x 100))

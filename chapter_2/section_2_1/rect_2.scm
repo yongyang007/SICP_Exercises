@@ -1,4 +1,5 @@
-(load "./exercise_2_2.scm")
+(add-load-path "./")
+(load "exercise_2_2.scm")
                                         ;用两条线段定义
                                         ;     s1
                                         ;   o----o

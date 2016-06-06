@@ -1,4 +1,5 @@
-(load "./exercise_1_42.scm")
+(add-load-path "./")
+(load "exercise_1_42.scm")
 
 (define (repeated f n)
   (define (iter result i)
