@@ -1,8 +1,13 @@
 (use gl)
 (use gl.glut)
 
+(add-load-path "./")
+(load "vector.scm")
+(load "segment.scm")
+(load "frame.scm")
+
 (define (draw-line p1 p2)
-  (define (t z) (- (* 2 z) 1))
+  (define (t z) (- (* 2 z) 1)) ;因为坐标原点在画布中心
   (gl-begin GL_LINE_LOOP)
   (gl-vertex (t (xcor-vect p1)) (t (ycor-vect p1)))
   (gl-vertex (t (xcor-vect p2)) (t (ycor-vect p2)))
@@ -63,7 +68,7 @@
       (left frame)
       (right frame))))
 
-(define house
+(define draw-house
   (segments->painter (list
                       (make-segment (make-vect 0.5 1.0)
                                     (make-vect 0.0 0.5))
@@ -87,3 +92,23 @@
                                     (make-vect 0.7 0.8))
                       (make-segment (make-vect 0.7 0.8)
                                     (make-vect 0.5 1.0)))))
+
+(define (house frame)
+  (draw draw-house frame))
+
+(define (draw draw-func frame)
+  (let ((draw-func draw-func)
+        (frame frame))
+    (define (disp)
+      (gl-clear GL_COLOR_BUFFER_BIT)
+      (gl-color 0.0 0.0 0.0 0.0)
+      (draw-house frame)
+      (gl-flush))
+    (define (init)
+      (gl-clear-color 1.0 1.0 1.0 1.0))
+    (glut-init '())
+    (glut-init-display-mode GLUT_RGBA)
+    (glut-create-window "Painter")
+    (glut-display-func disp)
+    (init)
+    (glut-main-loop)))
