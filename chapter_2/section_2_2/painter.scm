@@ -68,9 +68,8 @@
       (left frame)
       (right frame))))
 
-(define (draw-house frame)
-  (gl-color 0.0 0.0 0.0 0.0)
-  ((segments->painter (list
+(define house-painter
+  (segments->painter (list
                       (make-segment (make-vect 0.5 1.0)
                                     (make-vect 0.0 0.5))
                       (make-segment (make-vect 0.0 0.5)
@@ -92,10 +91,16 @@
                       (make-segment (make-vect 0.7 0.9)
                                     (make-vect 0.7 0.8))
                       (make-segment (make-vect 0.7 0.8)
-                                    (make-vect 0.5 1.0)))) frame))
+                                    (make-vect 0.5 1.0)))))
+
+(define (draw-black-line-painter draw-painter)
+  (lambda (frame)
+    (gl-color 0.0 0.0 0.0 0.0)
+    (draw-painter frame)))
 
 (define (house frame)
-  (draw draw-house frame
+  (draw (draw-black-line-painter house-painter)
+        frame
         (lambda () (gl-clear-color 1.0 1.0 1.0 1.0))))
 
 (define (draw draw-func frame init)
