@@ -98,22 +98,18 @@
     (gl-color 0.0 0.0 0.0 0.0)
     (draw-painter frame)))
 
-(define (house frame)
-  (draw (draw-black-line-painter house-painter)
-        frame
-        (lambda () (gl-clear-color 1.0 1.0 1.0 1.0))))
+(define house
+  (draw-black-line-painter house-painter))
 
-(define (draw draw-func frame init)
-  (let ((draw-func draw-func)
-        (frame frame)
-        (init init))
+(define (draw painter-operation)
+  (let ((op painter-operation))
     (define (disp)
       (gl-clear GL_COLOR_BUFFER_BIT)
-      (draw-func frame)
+      (op)
       (gl-flush))
     (glut-init '())
     (glut-init-display-mode GLUT_RGBA)
     (glut-create-window "Painter")
     (glut-display-func disp)
-    (init)
+    (gl-clear-color 1.0 1.0 1.0 1.0)
     (glut-main-loop)))
