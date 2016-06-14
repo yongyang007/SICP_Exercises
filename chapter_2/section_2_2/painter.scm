@@ -37,6 +37,9 @@
                      (make-vect 1.0 1.0)
                      (make-vect 0.0 0.0)))
 
+                                        ;load filp-horiz, rotate180 and rotate270
+(load "exercise_2_50.scm")
+
 (define (shrink-to-upper-right painter)
   (transform-painter painter
                      (make-vect 0.5 0.5)
@@ -56,17 +59,34 @@
                      (make-vect 0.35 0.65)))
 
 (define (beside painter1 painter2)
-  (let ((left (transform-painter painter1
-                                 (make-vect 0.0 0.0)
-                                 (make-vect 0.5 0.0)
-                                 (make-vect 0.0 1.0)))
-        (right (transform-painter painter2
-                                  (make-vect 0.5 0.0)
-                                  (make-vect 1.0 0.0)
-                                  (make-vect 0.5 1.0))))
-    (lambda (frame)
-      (left frame)
-      (right frame))))
+  (let ((split-point (make-vect 0.5 0.0)))
+    (let ((left (transform-painter painter1
+                                   (make-vect 0.0 0.0)
+                                   (make-vect 0.5 0.0)
+                                   (make-vect 0.0 1.0)))
+          (right (transform-painter painter2
+                                    (make-vect 0.5 0.0)
+                                    (make-vect 1.0 0.0)
+                                    (make-vect 0.5 1.0))))
+      (lambda (frame)
+        (left frame)
+        (right frame)))))
+
+(define (below painter1 painter2)
+  (let ((split-point (make-vect 0.0 0.5)))
+    (let ((paint-bottom
+           (transform-painter painter1
+                              (make-vect 0.0 0.0)
+                              (make-vect 1.0 0.0)
+                              split-point))
+          (paint-top
+           (transform-painter painter2
+                              split-point
+                              (make-vect 1.0 0.5)
+                              (make-vect 0.0 1.0))))
+      (lambda (frame)
+        (paint-bottom frame)
+        (paint-top frame)))))
 
 (define house-painter
   (segments->painter (list
@@ -113,3 +133,60 @@
     (glut-display-func disp)
     (gl-clear-color 1.0 1.0 1.0 1.0)
     (glut-main-loop)))
+
+(define wave-painter
+  (segments->painter (list
+                      (make-segment
+                       (make-vect 0.006 0.840)
+                       (make-vect 0.155 0.591))
+                      (make-segment
+                       (make-vect 0.006 0.635)
+                       (make-vect 0.155 0.392))
+                      (make-segment
+                       (make-vect 0.304 0.646)
+                       (make-vect 0.155 0.591))
+                      (make-segment
+                       (make-vect 0.298 0.591)
+                       (make-vect 0.155 0.392))
+                      (make-segment
+                       (make-vect 0.304 0.646)
+                       (make-vect 0.403 0.646))
+                      (make-segment
+                       (make-vect 0.298 0.591)
+                       (make-vect 0.354 0.492))
+                      (make-segment
+                       (make-vect 0.403 0.646)
+                       (make-vect 0.348 0.845))
+                      (make-segment
+                       (make-vect 0.354 0.492)
+                       (make-vect 0.249 0.0))
+                      (make-segment
+                       (make-vect 0.403 0.0)
+                       (make-vect 0.502 0.293))
+                      (make-segment
+                       (make-vect 0.502 0.293)
+                       (make-vect 0.602 0.0))
+                      (make-segment
+                       (make-vect 0.348 0.845)
+                       (make-vect 0.403 1.0))
+                      (make-segment
+                       (make-vect 0.602 1.0)
+                       (make-vect 0.652 0.845))
+                      (make-segment
+                       (make-vect 0.652 0.845)
+                       (make-vect 0.602 0.646))
+                      (make-segment
+                       (make-vect 0.602 0.646)
+                       (make-vect 0.751 0.646))
+                      (make-segment
+                       (make-vect 0.751 0.646)
+                       (make-vect 1.0 0.343))
+                      (make-segment
+                       (make-vect 0.751 0.0)
+                       (make-vect 0.657 0.442))
+                      (make-segment
+                       (make-vect 0.657 0.442)
+                       (make-vect 1.0 0.144)))))
+
+(define wave
+  (draw-black-line-painter wave-painter))

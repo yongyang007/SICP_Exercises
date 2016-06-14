@@ -1,5 +1,5 @@
 (add-load-path "./")
-(load "exercise_2_51.scm")
 (load "painter.scm")
+(load "exercise_2_51.scm")
 
-(draw (lambda () ((below (flip-vert house) house) frame)))
+(draw (lambda () ((below wave house) frame)))

@@ -1,7 +1,9 @@
-(define (beside painter1 painter2)) ;第一个画家的图像在左边一半，第二个在右边一半
-(define (below painter1 painter2))  ;第一个画家的图像在第二个之下
-(define (flip-vert painter))        ;上下颠倒
-(define (flip-horiz painter))       ;左右颠倒
+;(define (beside painter1 painter2)) ;第一个画家的图像在左边一半，第二个在右边一半
+;(define (below painter1 painter2))  ;第一个画家的图像在第二个之下
+;(define (flip-vert painter))        ;上下颠倒
+;(define (flip-horiz painter))       ;左右颠倒
+(add-load-path "./")
+(load "painter.scm")
 
 (define (flipped-pairs painter)
   (let ((painter2 (beside painter (flip-vert painter))))
@@ -12,6 +14,9 @@
       painter
       (let ((smaller (right-split painter (- n 1))))
         (beside painter (below smaller smaller)))))
+
+                                        ;load up-split
+(load "exercise_2_44.scm")
 
 (define (corner-split painter n)
   (if (= n 0)
