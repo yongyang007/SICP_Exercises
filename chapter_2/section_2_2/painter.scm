@@ -129,6 +129,7 @@
       (gl-flush))
     (glut-init '())
     (glut-init-display-mode GLUT_RGBA)
+    (glut-init-window-size 666 666)
     (glut-create-window "Painter")
     (glut-display-func disp)
     (gl-clear-color 1.0 1.0 1.0 1.0)
