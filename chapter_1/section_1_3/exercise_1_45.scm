@@ -1,9 +1,10 @@
 (add-load-path "./")
-(add-load-path "../../tool/")
 (load "fixed_point.scm")
 (load "average_damp.scm")
 (load "exercise_1_43.scm")
-(load "expt.scm")
+
+(define (expt base n)
+  ((repeated (lambda (x) (* base x)) n) 1))
 
 (define (damp-nth-root n damp-times)
   (lambda (x) (fixed-point
