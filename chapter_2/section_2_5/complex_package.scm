@@ -24,6 +24,17 @@
   (define (div z1 z2)
     (make-from-mag-ang (/ (magnitude z1) (magnitude z2))
                        (- (angle z1) (angle z2))))
+  ;; exercise 2.79
+  (define (equ? z1 z2)
+    (and (= (real-part z1) (real-part z2))
+         (= (imag-part z1) (imag-part z2))))
+  ;; exercise 2.79
+  ;; (define (equ? z1 z2)
+  ;;   (and (= (magnitude z1) (magnitude z2))
+  ;;        (= (angle z1) (angle z2))))
+  ;; exercise 2.80
+  (define (=zero? z)
+    (= (magnitude z) 0))
   ;; interface to rest of system
   (define (tag z) (attach-tag 'complex z))
   (put 'add
@@ -48,6 +59,14 @@
   (put 'imag-part '(complex) imag-part)
   (put 'magnitude '(complex) magnitude)
   (put 'angle '(complex) angle)
+  ;; exercise 2.79
+  (put 'equ?
+       '(complex complex)
+       equ?)
+  ;; exercise 2.80
+  (put '=zero?
+       '(complex)
+       =zero?)
   'done)
 
 (define (make-complex-from-real-imag x y)

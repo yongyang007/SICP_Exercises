@@ -1,4 +1,4 @@
-(add-load-path "./")
+(add-load-path "../section_2_4/")
 (load "put_and_get.scm")
 (load "tagged_data.scm")
 
@@ -6,7 +6,12 @@
 (define (sub x y) (apply-generic 'sub x y))
 (define (mul x y) (apply-generic 'mul x y))
 (define (div x y) (apply-generic 'div x y))
+;; exercise 2.79
+(define (equ? x y) (apply-generic 'equ? x y))
+;; exercise 2.80
+(define (=zero? x) (apply-generic '=zero? x))
 
+(add-load-path "./")
 (load "scheme_number_package.scm")
 (load "rational_package.scm")
 (load "complex_package.scm")

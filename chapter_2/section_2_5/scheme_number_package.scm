@@ -15,6 +15,14 @@
   (put 'make
        'scheme-number
        (lambda (x) (tag x)))
+  ;; exercise 2.79
+  (put 'equ?
+       '(scheme-number scheme-number)
+       =)
+  ;; exercise 2.80
+  (put '=zero?
+       '(scheme-number)
+       (lambda (x) (= x 0)))
   'done)
 
 (define (make-scheme-number n)

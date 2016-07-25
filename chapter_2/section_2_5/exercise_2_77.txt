@@ -1,0 +1,17 @@
+在complex包中添加一下代码：
+  (put 'real-part '(complex) real-part)
+  (put 'imag-part '(complex) imag-part)
+  (put 'magnitude '(complex) magnitude)
+  (put 'angle '(complex) angle)
+再在包外利用apply-generic定义选择方法：
+  (define (real-part z) (apply-generic 'real-part z))
+  (define (imag-part z) (apply-generic 'imag-part z))
+  (define (magnitude z) (apply-generic 'magnitude z))
+  (define (angle z) (apply-generic 'angle z))
+这样就可以保证所要操作的复数能正确地分派到需要执行的选择方法过程，
+以(magnitude z)为例，复数z最外面的标志为complex，
+但因为complex包中并没有定义该选择方法，
+它将被apply-generic再次分派到外部magnitude过程中去，
+这时它的标志也变成了polar，经过apply-generic的第二次分派，
+到达了polar包中所定义的magnitude过程中。
+也就是说,apply-generic被调用了两次。
