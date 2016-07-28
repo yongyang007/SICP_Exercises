@@ -23,6 +23,10 @@
   (put '=zero?
        '(scheme-number)
        (lambda (x) (= x 0)))
+  ;; for exercise 2.82
+  (put 'add
+       '(scheme-number scheme-number scheme-number)
+       (lambda (x y z) (tag (+ x y z))))
   'done)
 
 (define (make-scheme-number n)

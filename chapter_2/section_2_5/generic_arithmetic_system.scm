@@ -2,7 +2,9 @@
 (load "put_and_get.scm")
 (load "tagged_data.scm")
 
-(define (add x y) (apply-generic 'add x y))
+;; expand the add for exercise 2.82
+(define (add x . y)
+  (apply apply-generic (cons 'add (cons x y))))
 (define (sub x y) (apply-generic 'sub x y))
 (define (mul x y) (apply-generic 'mul x y))
 (define (div x y) (apply-generic 'div x y))

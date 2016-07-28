@@ -67,6 +67,11 @@
   (put '=zero?
        '(complex)
        =zero?)
+  ;; for exercise 2.82
+  (put 'add
+       '(complex complex complex)
+       (lambda (z1 z2 z3)
+         (tag (add (add z1 z2) z3))))
   'done)
 
 (define (make-complex-from-real-imag x y)
