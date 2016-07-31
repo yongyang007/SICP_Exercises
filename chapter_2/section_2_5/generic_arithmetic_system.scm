@@ -12,15 +12,25 @@
 (define (equ? x y) (apply-generic 'equ? x y))
 ;; exercise 2.80
 (define (=zero? x) (apply-generic '=zero? x))
+;; exercise 2.83
+(define (raise x) (apply-generic 'raise x))
+;; exercise 2.85
+(define (project x) (apply-generic 'project x))
 
 (add-load-path "./")
 (load "scheme_number_package.scm")
 (load "rational_package.scm")
 (load "complex_package.scm")
+;; exercise 2.83
+(load "integer_package.scm")
+(load "real_package.scm")
 
 (install-scheme-number-package)
 (install-rational-package)
 (install-complex-package)
+;; exercise 2.83
+(install-integer-package)
+(install-real-package)
 
 (define s1 (make-scheme-number 1))
 (define s2 (make-scheme-number 2))

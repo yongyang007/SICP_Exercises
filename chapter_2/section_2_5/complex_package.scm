@@ -35,6 +35,9 @@
   ;; exercise 2.80
   (define (=zero? z)
     (= (magnitude z) 0))
+  ;; exercise 2.85
+  (define (project z)
+    (make-real (real-part z)))
   ;; interface to rest of system
   (define (tag z) (attach-tag 'complex z))
   (put 'add
@@ -72,6 +75,8 @@
        '(complex complex complex)
        (lambda (z1 z2 z3)
          (tag (add (add z1 z2) z3))))
+  ;; exercise 2.85
+  (put 'project '(complex) project)
   'done)
 
 (define (make-complex-from-real-imag x y)

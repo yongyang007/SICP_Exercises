@@ -26,6 +26,9 @@
   ;; exercise 2.80
   (define (=zero? x)
     (= (numer x) 0))
+  ;; exercise 2.85
+  (define (project x)
+    (make-integer (floor->exact (/ (numer x) (denom x)))))
   ;; interface to rest of the system
   (define (tag x) (attach-tag 'rational x))
   (put 'add
@@ -51,6 +54,12 @@
   (put '=zero?
        '(rational)
        =zero?)
+  ;; exercise 2.83
+  (put 'raise
+       '(rational)
+       (lambda (x) (make-real (/ (numer x) (denom x)))))
+  ;; exercise 2.85
+  (put 'project '(rational) project)
   'done)
 
 (define (make-rational n d)
