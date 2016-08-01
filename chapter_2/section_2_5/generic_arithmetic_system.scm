@@ -16,6 +16,12 @@
 (define (raise x) (apply-generic 'raise x))
 ;; exercise 2.85
 (define (project x) (apply-generic 'project x))
+;; exercise 2.86
+(define (sine x) (apply-generic 'sine x))
+(define (cosine x) (apply-generic 'cosine x))
+(define (arctan y x) (apply-generic 'arctan y x))
+(define (square x) (apply-generic 'square x))
+(define (square-root x) (apply-generic 'square-root x))
 
 (add-load-path "./")
 (load "scheme_number_package.scm")

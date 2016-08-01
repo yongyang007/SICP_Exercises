@@ -26,6 +26,22 @@
   (put 'raise
        '(integer)
        (lambda (x) (make-rational x 1)))
+  ;; exercise 2.86
+  (put 'sine
+       '(integer)
+       (lambda (x) (tag (sin x))))
+  (put 'cosine
+       '(integer)
+       (lambda (x) (tag (cos x))))
+  (put 'arctan
+       '(integer integer)
+       (lambda (y x) (tag (atan y x))))
+  (put 'square
+       '(integer)
+       (lambda (x) (tag (* x x))))
+  (put 'square-root
+       '(integer)
+       (lambda (x) (tag (sqrt x))))
   'done)
 
 (define (make-integer n)

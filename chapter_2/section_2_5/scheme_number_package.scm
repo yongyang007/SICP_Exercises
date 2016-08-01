@@ -27,6 +27,22 @@
   (put 'add
        '(scheme-number scheme-number scheme-number)
        (lambda (x y z) (tag (+ x y z))))
+  ;; exercise 2.86
+  (put 'sine
+       '(scheme-number)
+       (lambda (x) (tag (sin x))))
+  (put 'cosine
+       '(scheme-number)
+       (lambda (x) (tag (cos x))))
+  (put 'arctan
+       '(scheme-number scheme-number)
+       (lambda (y x) (tag (atan y x))))
+  (put 'square
+       '(scheme-number)
+       (lambda (x) (tag (* x x))))
+  (put 'square-root
+       '(scheme-number)
+       (lambda (x) (tag (sqrt x))))
   'done)
 
 (define (make-scheme-number n)

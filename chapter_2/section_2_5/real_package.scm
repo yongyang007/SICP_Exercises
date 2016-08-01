@@ -43,6 +43,22 @@
        (lambda (x) (make-complex-from-real-imag x 0)))
   ;; exercise 2.85
   (put 'project '(real) project)
+  ;; exercise 2.86
+  (put 'sine
+       '(real)
+       (lambda (x) (tag (sin x))))
+  (put 'cosine
+       '(real)
+       (lambda (x) (tag (cos x))))
+  (put 'arctan
+       '(real real)
+       (lambda (y x) (tag (atan y x))))
+  (put 'square
+       '(real)
+       (lambda (x) (tag (* x x))))
+  (put 'square-root
+       '(real)
+       (lambda (x) (tag (sqrt x))))
   'done)
 
 (define (make-real n)

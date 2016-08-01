@@ -3,13 +3,14 @@
   (define (real-part z) (car z))
   (define (imag-part z) (cdr z))
   (define (make-from-real-imag x y) (cons x y))
+  ;; modify for exercise 2.86
   (define (magnitude z)
-    (sqrt (+ (square (real-part z))
-             (square (imag-part z)))))
+    (square-root (add (square (real-part z))
+                      (square (imag-part z)))))
   (define (angle z)
-    (atan (imag-part z) (real-part z)))
+    (arctan (imag-part z) (real-part z)))
   (define (make-from-mag-ang r a)
-    (cons (* r (cos a)) (* r (sin a))))
+    (cons (mul r (cosine a)) (mul r (sine a))))
   ;; interface to the rest of the system
   (define (tag x) (attach-tag 'rectangular x))
   (put 'real-part '(rectangular) real-part)
