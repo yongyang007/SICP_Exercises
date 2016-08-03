@@ -37,6 +37,9 @@
 ;; exercise 2.83
 (install-integer-package)
 (install-real-package)
+;; polynomial package
+(load "polynomial_package.scm")
+(install-polynomial-package)
 
 (define s1 (make-scheme-number 1))
 (define s2 (make-scheme-number 2))
