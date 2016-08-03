@@ -42,6 +42,10 @@
   (put 'square-root
        '(integer)
        (lambda (x) (tag (sqrt x))))
+  ;; exercise 2.88
+  (put 'negation
+       '(integer)
+       (lambda (x) (tag (- x))))
   'done)
 
 (define (make-integer n)

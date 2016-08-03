@@ -22,6 +22,8 @@
 (define (arctan y x) (apply-generic 'arctan y x))
 (define (square x) (apply-generic 'square x))
 (define (square-root x) (apply-generic 'square-root x))
+;; exercise 2.88
+(define (negation x) (apply-generic 'negation x))
 
 (add-load-path "./")
 (load "scheme_number_package.scm")

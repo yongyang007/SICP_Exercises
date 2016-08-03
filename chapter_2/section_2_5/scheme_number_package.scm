@@ -43,6 +43,10 @@
   (put 'square-root
        '(scheme-number)
        (lambda (x) (tag (sqrt x))))
+  ;; exercise 2.88
+  (put 'negation
+       '(scheme-number)
+       (lambda (x) (tag (- x))))
   'done)
 
 (define (make-scheme-number n)

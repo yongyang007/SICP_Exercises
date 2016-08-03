@@ -60,6 +60,11 @@
        (lambda (x) (make-real (/ (numer x) (denom x)))))
   ;; exercise 2.85
   (put 'project '(rational) project)
+  ;; exercise 2.88
+  (put 'negation
+       '(rational)
+       (lambda (x) (tag (make-rat (- (numer x))
+                                  (denom x)))))
   'done)
 
 (define (make-rational n d)

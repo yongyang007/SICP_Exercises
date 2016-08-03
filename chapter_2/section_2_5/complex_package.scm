@@ -77,6 +77,11 @@
          (tag (add (add z1 z2) z3))))
   ;; exercise 2.85
   (put 'project '(complex) project)
+  ;; exercise 2.88
+  (put 'negation
+       '(complex)
+       (lambda (x) (tag (make-from-real-imag (- (real-part x))
+                                             (- (imag-part x))))))
   'done)
 
 (define (make-complex-from-real-imag x y)

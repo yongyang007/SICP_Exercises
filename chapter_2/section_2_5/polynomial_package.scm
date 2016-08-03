@@ -35,6 +35,23 @@
                               (term-list p2)))
         (error "Polys not in same var -- MUL-POLY"
                (list p1 p2))))
+  ;; exercise 2.87
+  (define (=zero-poly? p)
+    (let ((terms (term-list p)))
+      (if (null? terms)
+          #t
+          (if (null? (filter
+                      (lambda (term-coeff) (not (=zero? term-coeff)))
+                      (map coeff terms)))
+              #t
+              #f))))
+  ;; exercise 2.88
+  (define (negation-poly p)
+    (make-poly (variable p)
+               (map negation-term (term-list p))))
+  (define (negation-term t)
+    (make-term (order t)
+               (negation (coeff t))))
 
   (define (add-terms L1 L2)
     (cond ((empty-termlist? L1) L2)
@@ -79,6 +96,17 @@
   (put 'make
        'polynomial
        (lambda (var terms) (tag (make-poly var terms))))
+  ;; exercise 2.87
+  (put '=zero?
+       '(polynomial)
+       =zero-poly?)
+  ;; exercise 2.88
+  (put 'negation
+       '(polynomial)
+       (lambda (p) (tag (negation-poly p))))
+  (put 'sub
+       '(polynomial polynomial)
+       (lambda (p1 p2) (tag (add-poly p1 (negation-poly p2)))))
   'done)
 (define (make-polynomial var terms)
   ((get 'make 'polynomial) var terms))

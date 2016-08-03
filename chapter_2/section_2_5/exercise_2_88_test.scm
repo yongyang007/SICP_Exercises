@@ -1,0 +1,20 @@
+(add-load-path "./")
+(load "generic_arithmetic_system.scm")
+
+(negation 1)
+(negation (make-integer 8.8))
+(negation (make-rational -3 9))
+(negation (make-real 7))
+(negation (make-complex-from-real-imag 1 2))
+(negation (make-complex-from-mag-ang 5 (atan 4 3)))
+(negation (make-polynomial 'x '((5 2) (4 3) (3 7) (0 4))))
+
+(sub (make-polynomial 'x (list (list 2 (make-integer 4))))
+     (make-polynomial 'x (list (list 2 (make-integer 3.8)))))
+
+(define p1 (make-polynomial 'y (list (list 5 (make-rational 3 9))
+                                     (list 3 (make-rational 1 2)))))
+(define p2 (make-polynomial 'y (list (list 5 (make-rational 1 3))
+                                     (list 3 (make-rational 5 10)))))
+(sub (make-polynomial 'x (list (list 1 p1)))
+     (make-polynomial 'x (list (list 1 p2))))

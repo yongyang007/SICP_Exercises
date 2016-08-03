@@ -59,6 +59,10 @@
   (put 'square-root
        '(real)
        (lambda (x) (tag (sqrt x))))
+  ;; exercise 2.88
+  (put 'negation
+       '(real)
+       (lambda (x) (tag (- x))))
   'done)
 
 (define (make-real n)
