@@ -1,3 +1,10 @@
+;; modify for exercise 2.90
+(add-load-path "./")
+(load "sparse_package.scm")
+(load "dense_package.scm")
+(install-sparse-package)
+(install-dense-package)
+
 (define (install-polynomial-package)
   ;; internal procedures
   ;; representation of poly
@@ -9,17 +16,28 @@
   (define (same-variable? x y)
     (and (variable? x) (variable? y) (eq? x y)))
   ;; representation of terms and term lists
+  ;; modify for exercise 2.90
+  (define (make-termlist type term-list)
+    ((get 'make-termlist type) term-list))
+  (define (make-sparse-termlist term-list)
+    (make-termlist 'sparse term-list))
+  (define (make-dense-termlist term-list)
+    (make-termlist 'dense term-list))
   (define (adjoin-term term term-list)
-    (if (=zero? (coeff term))
-        term-list
-        (cons term term-list)))
-  (define (the-empty-termlist) '())
-  (define (first-term term-list) (car term-list))
-  (define (rest-terms term-list) (cdr term-list))
-  (define (empty-termlist? term-list) (null? term-list))
-  (define (make-term order coeff) (list order coeff))
-  (define (order term) (car term))
-  (define (coeff term) (cadr term))
+    (apply-generic 'adjoin-term term term-list))
+  (define (the-empty-termlist type)
+    (make-termlist type '()))
+  (define (first-term term-list)
+    (apply-generic 'first-term term-list))
+  (define (rest-terms term-list)
+    (apply-generic 'rest-terms term-list))
+  (define (empty-termlist? term-list) (null? (contents term-list)))
+  (define (make-term type order coeff)
+    ((get 'make-term type) order coeff))
+  (define (order term)
+    (apply-generic 'order term))
+  (define (coeff term)
+    (apply-generic 'coeff term))
 
   (define (add-poly p1 p2)
     (if (same-variable? (variable p1) (variable p2))
@@ -48,10 +66,11 @@
   ;; exercise 2.88
   (define (negation-poly p)
     (make-poly (variable p)
-               (map negation-term (term-list p))))
-  (define (negation-term t)
-    (make-term (order t)
-               (negation (coeff t))))
+               ;; modify for exercise 2.90
+               (negation-termlist (term-list p))))
+  ;; modify for exercixe 2.90
+  (define (negation-termlist term-list)
+    (apply-generic 'negation term-list))
 
   (define (add-terms L1 L2)
     (cond ((empty-termlist? L1) L2)
@@ -67,21 +86,27 @@
                      t2 (add-terms L1 (rest-terms L2))))
                    (else
                     (adjoin-term
-                     (make-term (order t1)
+                     ;; modify for exercixe 2.90
+                     (make-term (type-tag t1)
+                                (order t1)
                                 (add (coeff t1) (coeff t2)))
                      (add-terms (rest-terms L1)
                                 (rest-terms L2)))))))))
   (define (mul-terms L1 L2)
     (if (empty-termlist? L1)
-        (the-empty-termlist)
+        ;; modify for exercixe 2.90
+        (the-empty-termlist (type-tag L1))
         (add-terms (mul-term-by-all-terms (first-term L1) L2)
                    (mul-terms (rest-terms L1) L2))))
   (define (mul-term-by-all-terms t1 L)
     (if (empty-termlist? L)
-        (the-empty-termlist)
+        ;; modify for exercixe 2.90
+        (the-empty-termlist (type-tag L))
         (let ((t2 (first-term L)))
           (adjoin-term
-           (make-term (+ (order t1) (order t2))
+           ;; modify for exercixe 2.90
+           (make-term (type-tag t1)
+                      (+ (order t1) (order t2))
                       (mul (coeff t1) (coeff t2)))
            (mul-term-by-all-terms t1 (rest-terms L))))))
 
@@ -93,9 +118,15 @@
   (put 'mul
        '(polynomial polynomial)
        (lambda (p1 p2) (tag (mul-poly p1 p2))))
-  (put 'make
+  ;; modify for exercixe 2.90
+  (put 'make-sparse
        'polynomial
-       (lambda (var terms) (tag (make-poly var terms))))
+       (lambda (var terms) (tag (make-poly var
+                                           (make-sparse-termlist terms)))))
+  (put 'make-dense
+       'polynomial
+       (lambda (var terms) (tag (make-poly var
+                                           (make-dense-termlist terms)))))
   ;; exercise 2.87
   (put '=zero?
        '(polynomial)
@@ -108,5 +139,8 @@
        '(polynomial polynomial)
        (lambda (p1 p2) (tag (add-poly p1 (negation-poly p2)))))
   'done)
-(define (make-polynomial var terms)
-  ((get 'make 'polynomial) var terms))
+;; modify for exercixe 2.90
+(define (make-sparse-polynomial var terms)
+  ((get 'make-sparse 'polynomial) var terms))
+(define (make-dense-polynomial var terms)
+  ((get 'make-dense 'polynomial) var terms))
