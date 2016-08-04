@@ -48,7 +48,7 @@
        (lambda (z1 z2) (tag (sub z1 z2))))
   (put 'mul
        '(complex complex)
-       (lambda (z1 z2) (mul z1 z2)))
+       (lambda (z1 z2) (tag (mul z1 z2))))
   (put 'div
        '(complex complex)
        (lambda (z1 z2) (tag (div z1 z2))))
