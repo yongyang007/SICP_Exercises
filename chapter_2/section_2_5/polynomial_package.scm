@@ -53,6 +53,22 @@
                               (term-list p2)))
         (error "Polys not in same var -- MUL-POLY"
                (list p1 p2))))
+  ;; exercise 2.88
+  (define (sub-poly p1 p2)
+    (if (same-variable? (variable p1) (variable p2))
+        (add-poly p1 (negation-poly p2))
+        (error "Polys not in same var -- SUB-POLY"
+               (list p1 p2))))
+  ;; exercise 2.91
+  (define (div-poly p1 p2)
+    (if (same-variable? (variable p1) (variable p2))
+        (map (lambda (terms)
+               (make-poly (variable p1)
+                          terms))
+             (div-terms (term-list p1)
+                        (term-list p2)))
+        (error "Polys not in same var -- DIV-POLY"
+               (list p1 p2))))
   ;; exercise 2.87
   (define (=zero-poly? p)
     (let ((terms (term-list p)))
@@ -109,6 +125,29 @@
                       (+ (order t1) (order t2))
                       (mul (coeff t1) (coeff t2)))
            (mul-term-by-all-terms t1 (rest-terms L))))))
+  ;; exercise 2.91
+  (define (sub-terms L1 L2)
+    (add-terms L1 (negation-termlist L2)))
+  (define (div-terms L1 L2)
+    (let ((type1 (type-tag L1)))
+      (if (empty-termlist? L1)
+          (list (the-empty-termlist type1) (the-empty-termlist type1))
+          (let ((t1 (first-term L1))
+                (t2 (first-term L2)))
+            (if (> (order t2) (order t1))
+                (list (the-empty-termlist type1) L1)
+                (let ((new-c (div (coeff t1) (coeff t2)))
+                      (new-o (- (order t1) (order t2))))
+                  (let ((rest-of-result
+                         (div-terms (sub-terms L1
+                                               (mul-term-by-all-terms
+                                                (make-term type1 new-o new-c)
+                                                L2))
+                                    L2)))
+                    (list (adjoin-term
+                           (make-term type1 new-o new-c)
+                           (car rest-of-result))
+                          (cadr rest-of-result)))))))))
 
   ;; interface to rest of the system
   (define (tag p) (attach-tag 'polynomial p))
@@ -137,7 +176,11 @@
        (lambda (p) (tag (negation-poly p))))
   (put 'sub
        '(polynomial polynomial)
-       (lambda (p1 p2) (tag (add-poly p1 (negation-poly p2)))))
+       (lambda (p1 p2) (tag (sub-poly p1 p2))))
+  ;; exercise 2.91
+  (put 'div
+       '(polynomial polynomial)
+       (lambda (p1 p2) (map tag (div-poly p1 p2))))
   'done)
 ;; modify for exercixe 2.90
 (define (make-sparse-polynomial var terms)
