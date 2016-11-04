@@ -112,3 +112,10 @@
 (define (accelerated-sequence transform s)
   (stream-map stream-car
               (make-tableau transform s)))
+
+(define (integral integrand initial-value dt)
+  (define int
+    (cons-stream initial-value
+                 (add-streams (scale-stream integrand dt)
+                              int)))
+  int)
