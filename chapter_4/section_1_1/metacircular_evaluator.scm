@@ -151,5 +151,5 @@
                 (error "ELSE clause isn't last -- COND->IF"
                        clause))
             (make-if (cond-predicate first)
-                     (sequence->exp (cond-actions firsr))
+                     (sequence->exp (cond-actions first))
                      (expand-clauses rest))))))
