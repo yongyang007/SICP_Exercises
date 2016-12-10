@@ -1,3 +1,7 @@
+(define true #t)
+(define false #f)
+(define apply-in-underly-scheme apply) ;; alias
+
 ;; the core of the evaluator
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)
@@ -70,7 +74,7 @@
 (define (variable? exp) (symbol? exp))
 
 (define (quoted? exp)
-  (tagged-list? exp 'qoute))
+  (tagged-list? exp 'quote))
 
 (define (text-of-quotation exp) (cadr exp))
 
@@ -229,3 +233,59 @@
             (else (scan (cdr vars) (cdr vals)))))
     (scan (frame-variables frame)
           (frame-values frame))))
+
+;; running the evaluator as a program
+(define primitive-procedures
+  (list (list 'car car)
+        (list 'cdr cdr)
+        (list 'cons cons)
+        (list 'null? null?)
+        ;; <more primitives>
+        ))
+(define (primitive-procedure-names)
+  (map car
+       primitive-procedures))
+(define (primitive-procedure-objects)
+  (map (lambda (proc) (list 'primitive (cadr proc)))
+       primitive-procedures))
+
+(define (setup-environment)
+  (let ((initial-env
+         (extend-environment (primitive-procedure-names)
+                             (primitive-procedure-objects)
+                             the-empty-environment)))
+    (define-variable! 'true true initial-env)
+    (define-variable! 'false false initial-env)
+    initial-env))
+(define the-global-environment (setup-environment))
+
+(define (primitive-procedure? proc)
+  (tagged-list? proc 'primitive))
+
+(define (primitive-implementation proc) (cadr proc))
+
+(define (apply-primitive-procedure proc args)
+  (apply-in-underly-scheme
+   (primitive-implementation proc) args))
+
+(define input-prompt ";;; M-Eval imput:")
+(define output-prompt ";;; M-Eval value:")
+(define (driver-loop)
+  (prompt-for-input input-prompt)
+  (let ((input (read)))
+    (let ((output (eval input the-global-environment)))
+      (announce-output output-prompt)
+      (user-print output)))
+  (driver-loop))
+(define (prompt-for-input string)
+  (newline) (newline) (display string) (newline))
+(define (announce-output string)
+  (newline) (display string) (newline))
+
+(define (user-print object)
+  (if (compound-procedure? object)
+      (display (list 'compound-procedure
+                     (procedure-parameters object)
+                     (procedure-body object)
+                     '<procedure-env>))
+      (display object)))
