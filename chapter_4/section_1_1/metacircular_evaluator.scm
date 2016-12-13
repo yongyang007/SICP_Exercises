@@ -309,6 +309,38 @@
                      '<procedure-env>))
       (display object)))
 
+;; `and and or
+(define (and? exp) (tagged-list? exp 'and))
+(define (or? exp) (tagged-list? exp 'or))
+
+(define (and-clauses exp) (cdr exp))
+(define (or-clauses exp) (cdr exp))
+
+(define (and->if exp)
+  (expand-and-clauses (and-clauses exp)))
+
+(define (expand-and-clauses clauses)
+  (if (null? clauses)
+      (make-if 'true 'true 'false)
+      (let ((first (car clauses))
+            (rest (cdr clauses)))
+        (make-if first
+                 (if (null? rest)
+                     first
+                     (expand-and-clauses rest))
+                 'false))))
+
+(define (or->if exp)
+  (expand-or-clauses (or-clauses exp)))
+
+(define (expand-or-clauses clauses)
+  (if (null? clauses)
+      (make-if 'true 'false 'true)
+      (make-if (car clauses)
+               'true
+               (expand-or-clauses (cdr clauses)))))
+
+
 ;; change the load order of eval
 (put 'eval 'quote (lambda (exp env) (text-of-quotation exp)))
 (put 'eval 'set! eval-assignment)
@@ -325,6 +357,10 @@
      (lambda (exp env)
        (eval-sequence (begin-actions exp) env)))
 (put 'eval 'cond (lambda (exp env) (eval (cond->if exp) env)))
+
+;; `and and or
+(put 'eval 'and (lambda (exp env) (eval (and->if exp) env)))
+(put 'eval 'or (lambda (exp env) (eval (or->if exp) env)))
 
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)
