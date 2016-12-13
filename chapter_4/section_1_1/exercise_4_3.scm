@@ -41,7 +41,7 @@
 (add-load-path "./")
 (load "metacircular_evaluator.scm")
 
-(put 'eval 'quoted (lambda (exp env) (text-of-quotation exp)))
+(put 'eval 'quote (lambda (exp env) (text-of-quotation exp)))
 (put 'eval 'set! eval-assignment)
 (put 'eval 'define eval-definition)
 (put 'eval 'if eval-if)
