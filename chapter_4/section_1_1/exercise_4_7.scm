@@ -1,10 +1,10 @@
 (define (make-let bindings body)
-  (list 'let bindings body))
+  (cons 'let (cons bindings body)))
 
 (define (let*? exp) (tagged-list? exp 'let*))
 
 (define (let*-bindings exp) (cadr exp))
-(define (let*-body exp) (caddr exp))
+(define (let*-body exp) (cddr exp))
 
 (define (let*->nested-lets exp)
   (expand-body (let*-bindings exp) (let*-body exp)))
@@ -15,7 +15,7 @@
       (make-let (list (car bindings))
                 (if (null? (cdr bindings))
                     body
-                    (expand-body (cdr bindings) body)))))
+                    (list (expand-body (cdr bindings) body))))))
 
 ;; test
 (define test-exp '(let* ((x 3) (y (+ x 2)) (z (+ x y 5))) (* x z)))

@@ -364,6 +364,26 @@
          (let-body exp))
         (let-arguments exp)))
 
+;; let*
+(define (make-let bindings body)
+  (cons 'let (cons bindings body)))
+
+(define (let*? exp) (tagged-list? exp 'let*))
+
+(define (let*-bindings exp) (cadr exp))
+(define (let*-body exp) (cddr exp))
+
+(define (let*->nested-lets exp)
+  (expand-body (let*-bindings exp) (let*-body exp)))
+
+(define (expand-body bindings body)
+  (if (null? bindings)
+      (make-let '() body)
+      (make-let (list (car bindings))
+                (if (null? (cdr bindings))
+                    body
+                    (list (expand-body (cdr bindings) body))))))
+
 ;; change the load order of eval
 (put 'eval 'quote (lambda (exp env) (text-of-quotation exp)))
 (put 'eval 'set! eval-assignment)
@@ -387,6 +407,9 @@
 
 ;; let
 (put 'eval 'let (lambda (exp env) (eval (let->combination exp) env)))
+
+;; let*
+(put 'eval 'let* (lambda (exp env) (eval (let*->nested-lets exp) env)))
 
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)
