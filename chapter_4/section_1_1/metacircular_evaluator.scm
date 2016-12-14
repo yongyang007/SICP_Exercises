@@ -184,6 +184,16 @@
                            (list (cadr actions) predicate)
                            (sequence->exp actions))
                        (expand-clauses rest)))))))
+
+;; make-unbound!
+(define (unbound? exp)
+  (tagged-list? exp 'make-unbound!))
+(define (unbound-variable exp) (cadr exp))
+(define (eval-unbound exp env)
+  (remove-variable! (unbound-variable exp)
+                    env)
+  'ok)
+
 ;; evaluator data structures
 (define (true? x)
   (not (eq? x false)))
@@ -264,6 +274,34 @@
     (if (frame-binding var frame)
         (set-binding-in-frame! var val frame)
         (add-binding-to-frame! var val frame))))
+
+;; make-unbound!
+(define (remove-binding-in-frame! var frame)
+  (define (scan vars vals)
+    (cond ((null? (cdr vars))
+           #f)
+          ((eq? var (cadr vars))
+           (set-cdr! vars (cddr vars))
+           (set-cdr! vals (cddr vals)))
+          (else (scan (cdr vars) (cdr vals)))))
+  (let ((variables (frame-variables frame))
+        (values (frame-values frame)))
+    (if (eq? var (car variables))
+        (begin
+          (set-car! frame (cdr variables))
+          (set-cdr! frame (cdr values)))
+        (scan variables
+              values))))
+
+(define (remove-variable! var env)
+  (define (env-loop env)
+    (if (eq? env the-empty-environment)
+        (error "Unbound variable -- MAKE-UNBOUND!" var)
+        (let ((frame (first-frame env)))
+          (if (frame-binding var frame)
+              (remove-binding-in-frame! var frame)
+              (env-loop (enclosing-environment env))))))
+  (env-loop env))
 
 ;; running the evaluator as a program
 (define primitive-procedures
@@ -428,6 +466,8 @@
 
 ;; let*
 (put 'eval 'let* (lambda (exp env) (eval (let*->nested-lets exp) env)))
+
+(put 'eval 'make-unbound! eval-unbound)
 
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)
