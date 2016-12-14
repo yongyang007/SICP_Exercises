@@ -266,6 +266,10 @@
         (list 'null? null?)
         (list 'eq? eq?)
         (list 'equal? equal?)
+        (list '+ +)
+        (list '- -)
+        (list '* *)
+        (list '/ /)
         ;; <more primitives>
         ))
 (define (primitive-procedure-names)
@@ -347,6 +351,18 @@
                'true
                (expand-or-clauses (cdr clauses)))))
 
+;; let
+(define (let? exp) (tagged-list? exp 'let))
+
+(define (let-parameters exp) (map car (cadr exp)))
+(define (let-arguments exp) (map cadr (cadr exp)))
+(define (let-body exp) (cddr exp))
+
+(define (let->combination exp)
+  (cons (make-lambda
+         (let-parameters exp)
+         (let-body exp))
+        (let-arguments exp)))
 
 ;; change the load order of eval
 (put 'eval 'quote (lambda (exp env) (text-of-quotation exp)))
@@ -368,6 +384,9 @@
 ;; `and and or
 (put 'eval 'and (lambda (exp env) (eval (and->if exp) env)))
 (put 'eval 'or (lambda (exp env) (eval (or->if exp) env)))
+
+;; let
+(put 'eval 'let (lambda (exp env) (eval (let->combination exp) env)))
 
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)

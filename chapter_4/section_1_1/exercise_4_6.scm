@@ -2,7 +2,7 @@
 
 (define (let-parameters exp) (map car (cadr exp)))
 (define (let-arguments exp) (map cadr (cadr exp)))
-(define (let-body exp) (caddr exp))
+(define (let-body exp) (cddr exp))
 
 (define (let->combination exp)
   (cons (make-lambda
@@ -37,4 +37,4 @@
 
 (define test-exp '(let ((<var1> <exp1>) (<var2> <exp2>)) <body>))
 (let->combination test-exp)
-;; => ((lambda (<var1> <var2>) . <body>) <exp1> <exp2>)
+;; => ((lambda (<var1> <var2>) <body>) <exp1> <exp2>)
