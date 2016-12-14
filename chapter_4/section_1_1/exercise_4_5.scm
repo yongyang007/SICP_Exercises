@@ -14,6 +14,6 @@
               (make-if predicate
                        (if (and (tagged-list? actions '=>)
                                 (null? (cddr actions)))
-                           (list ((cadr actions) predicate))
+                           (list (cadr actions) predicate)
                            (sequence->exp actions))
                        (expand-clauses rest)))))))

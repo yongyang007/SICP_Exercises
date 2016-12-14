@@ -165,6 +165,7 @@
 (define (cond->if exp)
   (expand-clauses (cond-clauses exp)))
 
+;; modify the expand-clauses to allow the syntax (<test> => <recipient>) for cond clauses
 (define (expand-clauses clauses)
   (if (null? clauses)
       'false                           ; no else clause
@@ -175,10 +176,14 @@
                 (sequence->exp (cond-actions first))
                 (error "ELSE clause isn't last -- COND->IF"
                        clause))
-            (make-if (cond-predicate first)
-                     (sequence->exp (cond-actions first))
-                     (expand-clauses rest))))))
-
+            (let ((predicate (cond-predicate first))
+                  (actions (cond-actions first)))
+              (make-if predicate
+                       (if (and (tagged-list? actions '=>)
+                                (null? (cddr actions)))
+                           (list (cadr actions) predicate)
+                           (sequence->exp actions))
+                       (expand-clauses rest)))))))
 ;; evaluator data structures
 (define (true? x)
   (not (eq? x false)))
@@ -259,6 +264,8 @@
         (list 'cdr cdr)
         (list 'cons cons)
         (list 'null? null?)
+        (list 'eq? eq?)
+        (list 'equal? equal?)
         ;; <more primitives>
         ))
 (define (primitive-procedure-names)
