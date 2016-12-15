@@ -74,8 +74,8 @@
 
 (define (eval-assignment exp env)
   (set-variable-value! (assignment-variable exp)
-                       (eval (assignment-value exp) evn)
-                       evn)
+                       (eval (assignment-value exp) env)
+                       env)
   'ok)
 
 (define (eval-definition exp env)
@@ -200,8 +200,28 @@
 (define (false? x)
   (eq? x false))
 
+;; add scan-out-defines to trans internal definitions
+(define (scan-out-defines proc-body)
+  (let ((definitions (filter definition? proc-body)))
+    (if (null? definitions)
+        proc-body
+        (let ((body (filter (lambda (b) (not (definition? b)))
+                            proc-body)))
+          (list
+           (make-let (map (lambda (definition)
+                            (list (definition-variable definition)
+                                  ''*unassigned*))
+                          definitions)
+                     (append
+                      (map (lambda (definition)
+                             (list 'set!
+                                   (definition-variable definition)
+                                   (definition-value definition)))
+                           definitions)
+                      body)))))))
+
 (define (make-procedure parameters body env)
-  (list 'procedure parameters body env))
+  (list 'procedure parameters (scan-out-defines body) env))
 (define (compound-procedure? p)
   (tagged-list? p 'procedure))
 (define (procedure-parameters p) (cadr p))
@@ -249,13 +269,18 @@
   (scan (frame-variables frame)
         (frame-values frame)))
 
+;; modify the lookup-variable-value
+;; signal an error when it found unassigned variable
 (define (lookup-variable-value var env)
   (define (env-loop env)
     (if (eq? env the-empty-environment)
         (error "Unbound variable" var)
         (let ((binding (frame-binding var (first-frame env))))
           (if binding
-              (binding-value binding)
+              (let ((value (binding-value binding)))
+                (if (eq? value '*unassigned*)
+                    (error "Unassigned variable" var)
+                    value))
               (env-loop (enclosing-environment env))))))
   (env-loop env))
 
@@ -397,7 +422,7 @@
                'true
                (expand-or-clauses (cdr clauses)))))
 
-;; modify the part of let to support the named letB
+;; modify the part of let to support the named let
 (define (let? exp) (tagged-list? exp 'let))
 
 (define (named-let? exp) (and (let? exp) (symbol? (cadr exp))))
