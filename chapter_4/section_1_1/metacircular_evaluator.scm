@@ -257,6 +257,7 @@
   (scan (frame-variables frame)
         (frame-values frame)))
 
+(define (binding-variable binding) (car binding))
 (define (binding-value binding) (cdr binding))
 
 (define (set-binding-in-frame! var val frame)
@@ -465,6 +466,25 @@
                     body
                     (list (expand-body (cdr bindings) body))))))
 
+;; letrec
+;; exercise 4.20 a)
+(define (letrec? exp) (tagged-list? exp 'letrec))
+
+(define (letrec-bingings exp) (cadr exp))
+(define (letrec-body exp) (cddr exp))
+
+(define (letrec->let exp)
+  (let ((bindings (letrec-bingings exp))
+        (body (letrec-body exp)))
+    (make-let (map
+               (lambda (var) (list var ''*unassigned*))
+               (map binding-variable bindings))
+              (append
+               (map
+                (lambda (binding) (cons 'set! binding))
+                bindings)
+               body))))
+
 ;; change the load order of eval
 (put 'eval 'quote (lambda (exp env) (text-of-quotation exp)))
 (put 'eval 'set! eval-assignment)
@@ -491,6 +511,10 @@
 
 ;; let*
 (put 'eval 'let* (lambda (exp env) (eval (let*->nested-lets exp) env)))
+
+;; letrec
+;; exercise 4.20 a)
+(put 'eval 'letrec (lambda (exp env) (eval (letrec->let exp) env)))
 
 (put 'eval 'make-unbound! eval-unbound)
 
