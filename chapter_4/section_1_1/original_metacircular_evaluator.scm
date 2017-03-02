@@ -42,26 +42,19 @@
 (define get (operation-table 'look-up-proc))
 
 ;; the core of the evaluator
-(define (analyze-application exp)
-  (let ((fproc (analyze (operator exp)))
-        (aprocs (map analyze (operands exp))))
-    (lambda (env)
-      (execute-application (fproc env)
-                           (map (lambda (aproc) (aproc env))
-                                aprocs)))))
-
-(define (execute-application proc args)
-  (cond ((primitive-procedure? proc)
-         (apply-primitive-procedure proc args))
-        ((compound-procedure? proc)
-         ((procedure-body proc)
+(define (apply procedure arguments)
+  (cond ((primitive-procedure? procedure)
+         (apply-primitive-procedure procedure arguments))
+        ((compound-procedure? procedure)
+         (eval-sequence
+          (procedure-body procedure)
           (extend-environment
-           (procedure-parameters proc)
-           args
-           (procedure-environment proc))))
+           (procedure-parameters procedure)
+           arguments
+           (procedure-environment procedure))))
         (else
          (error
-          "Unknown procedure type -- EXECUTE-APPLICATION" proc))))
+          "Unknown procedure type -- APPLY" procedure))))
 
 (define (list-of-values exps env)
   (if (no-operand? exps)
@@ -69,56 +62,27 @@
       (cons (eval (first-operand exps) env)
             (list-of-values (rest-operands exps) env))))
 
-(define (analyze-self-evaluating exp)
-  (lambda (env) exp))
+(define (eval-if exp env)
+  (if (true? (eval (if-predicate exp) env))
+      (eval (if-consequent exp) env)
+      (eval (if-alternative exp) env)))
 
-(define (analyze-quote exp)
-  (let ((qval (text-of-quotation exp)))
-    (lambda (env) qval)))
+(define (eval-sequence exps env)
+  (cond ((last-exp? exps) (eval (first-exp exps) env))
+        (else (eval (first-exp exps) env)
+              (eval-sequence (rest-exps exps) env))))
 
-(define (analyze-variable exp)
-  (lambda (env) (lookup-variable-value exp env)))
+(define (eval-assignment exp env)
+  (set-variable-value! (assignment-variable exp)
+                       (eval (assignment-value exp) env)
+                       env)
+  'ok)
 
-(define (analyze-if exp)
-  (let ((pproc (analyze (if-predicate exp)))
-        (cproc (analyze (if-consequent exp)))
-        (aproc (analyze (if-alternative exp))))
-    (lambda (env)
-      (if (true? (pproc env))
-          (cproc env)
-          (aproc env)))))
-
-(define (analyze-lambda exp)
-  (let ((vars (lambda-parameters exp))
-        (bproc (analyze-sequence (scan-out-defines (lambda-body exp)))))
-    (lambda (env) (make-procedure vars bproc env))))
-
-(define (analyze-sequence exps)
-  (define (sequentially proc1 proc2)
-    (lambda (env) (proc1 env) (proc2 env)))
-  (define (loop first-proc rest-procs)
-    (if (null? rest-procs)
-        first-proc
-        (loop (sequentially first-proc (car rest-procs))
-              (cdr rest-procs))))
-  (let ((procs (map analyze exps)))
-    (if (null? procs)
-        (error "Empty sequence -- ANALYZE"))
-    (loop (car procs) (cdr procs))))
-
-(define (analyze-assignment exp)
-  (let ((var (assignment-variable exp))
-        (vproc (analyze (assignment-value exp))))
-    (lambda (env)
-      (set-variable-value! var (vproc env) env)
-      'ok)))
-
-(define (analyze-definition exp)
-  (let ((var (definition-variable exp))
-        (vproc (analyze (definition-value exp))))
-    (lambda (env)
-      (define-variable! var (vproc env) env)
-      'ok)))
+(define (eval-definition exp env)
+  (define-variable! (definition-variable exp)
+                    (eval (definition-value exp) env)
+                    env)
+  'ok)
 
 ;; representing expressions
 (define (self-evaluating? exp)
@@ -225,11 +189,10 @@
 (define (unbound? exp)
   (tagged-list? exp 'make-unbound!))
 (define (unbound-variable exp) (cadr exp))
-(define (analyze-unbound exp)
-  (let ((var (unbound-variable exp)))
-    (lambda (env)
-      (remove-binding-in-frame! var env)
-      'ok)))
+(define (eval-unbound exp env)
+  (remove-variable! (unbound-variable exp)
+                    env)
+  'ok)
 
 ;; evaluator data structures
 (define (true? x)
@@ -258,7 +221,7 @@
                       body)))))))
 
 (define (make-procedure parameters body env)
-  (list 'procedure parameters body env))
+  (list 'procedure parameters (scan-out-defines body) env))
 (define (compound-procedure? p)
   (tagged-list? p 'procedure))
 (define (procedure-parameters p) (cadr p))
@@ -522,43 +485,46 @@
                 bindings)
                body))))
 
-;; change the load order of eval and analyze
-(put 'analyze 'quote analyze-quote)
-(put 'analyze 'set! analyze-assignment)
-(put 'analyze 'define analyze-definition)
-(put 'analyze 'if analyze-if)
-(put 'analyze 'lambda analyze-lambda)
-(put 'analyze
+;; change the load order of eval
+(put 'eval 'quote (lambda (exp env) (text-of-quotation exp)))
+(put 'eval 'set! eval-assignment)
+(put 'eval 'define eval-definition)
+(put 'eval 'if eval-if)
+(put 'eval
+     'lambda
+     (lambda (exp env)
+       (make-procedure (lambda-parameters exp)
+                       (lambda-body exp)
+                       env)))
+(put 'eval
      'begin
-     (lambda (exp)
-       (analyze-sequence (begin-actions exp))))
-(put 'analyze 'cond (lambda (exp) (analyze (cond->if exp))))
+     (lambda (exp env)
+       (eval-sequence (begin-actions exp) env)))
+(put 'eval 'cond (lambda (exp env) (eval (cond->if exp) env)))
 
 ;; `and and or
-(put 'analyze 'and (lambda (exp) (analyze (and->if exp))))
-(put 'analyze 'or (lambda (exp) (analyze (or->if exp))))
+(put 'eval 'and (lambda (exp env) (eval (and->if exp) env)))
+(put 'eval 'or (lambda (exp env) (eval (or->if exp) env)))
 
 ;; let
-(put 'analyze 'let (lambda (exp) (analyze (let->combination exp))))
+(put 'eval 'let (lambda (exp env) (eval (let->combination exp) env)))
 
 ;; let*
-(put 'analyze 'let* (lambda (exp) (analyze (let*->nested-lets exp))))
+(put 'eval 'let* (lambda (exp env) (eval (let*->nested-lets exp) env)))
 
 ;; letrec
 ;; exercise 4.20 a)
-(put 'analyze 'letrec (lambda (exp) (analyze (letrec->let exp))))
+(put 'eval 'letrec (lambda (exp env) (eval (letrec->let exp) env)))
 
-(put 'analyze 'make-unbound! analyze-unbound)
-
-(define (analyze exp)
-  (cond ((self-evaluating? exp)
-         (analyze-self-evaluating exp))
-        ((variable? exp) (analyze-variable exp))
-        ((get 'analyze (operator exp))
-         ((get 'analyze (operator exp)) exp))
-        ((application? exp) (analyze-application exp))
-        (else
-         (error "Unknown expression type -- ANALYZE" exp))))
+(put 'eval 'make-unbound! eval-unbound)
 
 (define (eval exp env)
-  ((analyze exp) env))
+  (cond ((self-evaluating? exp) exp)
+        ((variable? exp) (lookup-variable-value exp env))
+        ((get 'eval (operator exp))
+         ((get 'eval (operator exp)) exp env))
+        ((application? exp)
+         (apply (eval (operator exp) env)
+                (list-of-values (operands exp) env)))
+        (else
+         (error "Unknown expression type -- EVAL" exp))))
