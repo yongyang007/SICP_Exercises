@@ -507,7 +507,7 @@
 (put 'eval 'quote (lambda (exp env)
                     (let ((text (text-of-quotation exp)))
                       (if (pair? text)
-                          (eval (make-cons (car text)
+                          (eval (make-cons (make-quote (car text))
                                            (make-quote (cdr text)))
                                 env)
                           text))))
