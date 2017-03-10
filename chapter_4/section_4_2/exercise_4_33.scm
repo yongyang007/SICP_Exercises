@@ -1,0 +1,21 @@
+(add-load-path "./")
+(load "lazy_evaluator.scm")
+
+(define (make-cons car cdr)
+  (list 'cons car cdr))
+(define (make-quote text) (list 'quote text))
+(put 'eval 'quote (lambda (exp env)
+                    (let ((text (text-of-quotation exp)))
+                      (if (pair? text)
+                          (eval (make-cons (car text)
+                                           (make-quote (cdr text)))
+                                env)
+                          text))))
+(driver-loop)
+
+(car '(1 2 3))
+(car (cdr '(1 2 3)))
+(car (cdr (cdr '(1 2 3))))
+(cdr (cdr (cdr '(1 2 3))))
+'123
+;; (quote 1 2 3) => (cons 1 (quote 2 3))
