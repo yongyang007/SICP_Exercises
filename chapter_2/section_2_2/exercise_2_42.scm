@@ -33,6 +33,23 @@
                      (- (position-row position) (- k (position-col position)))))
              (cdr positions))))))
 
+(define (safe? k positions)
+  (let ((new-position (car positions))
+        (rest-positions (cdr positions)))
+    (null? (filter
+            (lambda (position)
+              (or (= (position-row new-position)
+                     (position-row position))
+                  (= (position-row new-position)
+                     (+ (position-row position)
+                        (- k
+                           (position-col position))))
+                  (= (position-row new-position)
+                     (- (position-row position)
+                        (- k
+                           (position-col position))))))
+            rest-positions))))
+
 (length (queens 1))
 (length (queens 2))
 (length (queens 3))
